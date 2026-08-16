@@ -32,6 +32,19 @@ def check_strength(password):
 def is_common_password(password):
     return password.lower() in COMMON_PASSWORDS
 
+def write_report(password, result, common, output_file="password_report.txt"):
+    with open(output_file, 'w') as f:
+        f.write("=== Password Strength Report ===\n\n")
+        f.write(f"Password checked: {'*' * len(password)} (hidden for safety)\n\n")
+        for check, passed in result.items():
+            f.write(f"{check}: {passed}\n")
+        f.write("\n")
+        if common:
+            f.write("⚠️ WARNING: This password appears in a common/leaked password list!\n")
+        else:
+            f.write("Not found in common password list.\n")
+    print(f"Report saved to {output_file}")
+
 password = "Password123"
 
 result = check_strength(password)
@@ -41,7 +54,4 @@ print(f"Password: {password}")
 for check, passed in result.items():
     print(f"{check}: {passed}")
 
-if common:
-    print("⚠️ WARNING: This password appears in a common/leaked password list!")
-else:
-    print("Not found in common password list.")
+write_report(password, result, common)
